@@ -99,7 +99,7 @@ private void Start()
 
         if (scoreText != null)
         scoreText.gameObject.SetActive(true);
-        
+
         if (BackgroundPanel != null) 
         BackgroundPanel.SetActive(false);
         IsGameOver = false;

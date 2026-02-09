@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 public class Spawner : MonoBehaviour
 {
-    public Pipes prefab;
+    public Pipes normalPipe;
+    public Pipes cannonPipe;
+    [Range(0f,1f)] public float cannonChance = 0.3f;
     public float spawnRate = 1f;
     public float minHeight = -1f;
     public float maxHeight = 2f;
@@ -14,12 +16,15 @@ public class Spawner : MonoBehaviour
     {
         CancelInvoke(nameof(Spawn));
     }
-    private void Spawn()
-    {
-        Pipes pipes = Instantiate(prefab, transform.position, Quaternion.identity);
-        pipes.transform.position += Vector3.up * Random.Range(minHeight, maxHeight);
-        pipes.gap = verticalGap;
-    }
+private void Spawn()
+{
+    Pipes chosen = Random.value < cannonChance ? cannonPipe : normalPipe;
+
+    Pipes pipes = Instantiate(chosen, transform.position, Quaternion.identity);
+    pipes.transform.position += Vector3.up * Random.Range(minHeight, maxHeight);
+    pipes.gap = verticalGap;
+}
+
 
     public void StartSpawning()
     {
