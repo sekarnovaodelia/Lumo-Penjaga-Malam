@@ -13,37 +13,39 @@ public class Cannon : MonoBehaviour
 
     bool isShooting;
 
-void Start()
-{
-    GameObject p = GameObject.FindWithTag("Player");
-
-    if (p != null)
+    void Start()
     {
-        player = p.transform;
-        AimToPlayer();
+        GameObject p = GameObject.FindWithTag("Player");
 
-        isShooting = true;
-        StartCoroutine(ShootLoop());
+        if (p != null)
+        {
+            player = p.transform;
+        }
+        else
+        {
+            Debug.LogError("PLAYER NOT FOUND");
+        }
     }
-    else
-        Debug.LogError("PLAYER NOT FOUND");
-}
-
 
     void Update()
     {
-        if (player == null || TurretPivot == null) return;
+        if (player == null || !player.gameObject.activeInHierarchy || TurretPivot == null)
+        {
+            StopAllCoroutines();
+            isShooting = false;
+            return;
+        }
 
         AimToPlayer();
 
         float dist = Vector2.Distance(player.position, transform.position);
 
-        if (dist < aggroDistance && !isShooting)
+        if (dist < aggroDistance && !isShooting && !GameManager.Instance.IsGameOver)
         {
             isShooting = true;
             StartCoroutine(ShootLoop());
         }
-        else if (dist > aggroDistance && isShooting)
+        else if ((dist > aggroDistance || GameManager.Instance.IsGameOver) && isShooting)
         {
             isShooting = false;
             StopAllCoroutines();
@@ -53,29 +55,27 @@ void Start()
     void AimToPlayer()
     {
         Vector3 dir = player.position - TurretPivot.position;
-
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-
         TurretPivot.rotation = Quaternion.Euler(0f, 0f, angle);
     }
 
     IEnumerator ShootLoop()
-{
-    while (true)
     {
-        Vector3 dir = player.position - shootPoint.position;
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        while (true)
+        {
+            if (player == null || !player.gameObject.activeInHierarchy)
+                yield break;
 
-        Instantiate(
-            bulletPrefab,
-            shootPoint.position,
-            Quaternion.Euler(0f, 0f, angle)
-        );
+            Vector3 dir = player.position - shootPoint.position;
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-        yield return new WaitForSeconds(fireDelay);
+            Instantiate(
+                bulletPrefab,
+                shootPoint.position,
+                Quaternion.Euler(0f, 0f, angle)
+            );
+
+            yield return new WaitForSeconds(fireDelay);
+        }
     }
-}
-
-
-
 }

@@ -3,24 +3,26 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float speed = 20f;
+    public int damage = 1;
 
-    Rigidbody2D rb;
+    Vector3 moveDir;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-
-        // langsung kasih velocity saat spawn
-        rb.velocity = transform.right * speed;
-
+        moveDir = transform.right;
         Destroy(gameObject, 5f);
+    }
+
+    void Update()
+    {
+        transform.position += moveDir * speed * Time.deltaTime;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            GameManager.Instance.GameOver();
+            GameManager.Instance.TakeDamage(damage);
             Destroy(gameObject);
         }
     }
