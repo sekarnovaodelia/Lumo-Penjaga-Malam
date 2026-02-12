@@ -35,7 +35,7 @@ public class Player : MonoBehaviour
     {
         if (IsCinematic) return;
 
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) {
+        if (Input.GetKeyDown(KeyCode.Space)) {
             direction = Vector3.up * strength;
         }
 
