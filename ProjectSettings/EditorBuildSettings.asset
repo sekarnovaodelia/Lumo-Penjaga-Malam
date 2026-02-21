@@ -5,7 +5,25 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Flappy Bird.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 0
+    path: Assets/Scenes/level 1 (2) - Copy.unity
+    guid: f125fcd8583200849abc28dad79f6140
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 5111578dd28602e4496bcc7955a7c2cd
+  - enabled: 1
+    path: Assets/Scenes/LevelSelect.unity
+    guid: 70373b93cdcf31449b93887e679a6db1
+  - enabled: 1
+    path: Assets/Scenes/Level 1.unity
+    guid: 9ff80372c0e08e449bfe8633d595f7d4
+  - enabled: 1
+    path: Assets/Scenes/Level 2.unity
+    guid: b433c926e39c11840852bbc0789bd966
+  - enabled: 1
+    path: Assets/Scenes/Level 3.unity
+    guid: be0e3cf4043bc8346be01c53ac8a8f52
   m_configObjects: {}

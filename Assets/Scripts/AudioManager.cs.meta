@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: f2c2c90fbd1bd6142bd006a1ff76a14e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - musicSource: {instanceID: 0}
+  - menuMusic: {fileID: 8300000, guid: 1baa6eb90f6f8f542acdcb93fa1dfda9, type: 3}
+  - chaseMusic: {fileID: 8300000, guid: 072776053d0fe074ab2e167755385d0f, type: 3}
+  - hitSound: {fileID: 8300000, guid: f8fa37ebc9b545242b059e014ed6965f, type: 3}
+  - fallSound: {instanceID: 0}
+  - pistolSound: {fileID: 8300000, guid: b776492e65723d74faddb218bbbf9718, type: 3}
+  - cannonShootSound: {instanceID: 0}
+  - passSound: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

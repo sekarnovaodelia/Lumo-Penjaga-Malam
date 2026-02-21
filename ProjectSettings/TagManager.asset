@@ -8,6 +8,8 @@ TagManager:
   - Scoring
   - canon
   - Bullet
+  - Ground
+  - ScoringCannon
   layers:
   - Default
   - TransparentFX
