@@ -368,7 +368,7 @@ MonoBehaviour:
   - button: {fileID: 800043512}
     lockIcon: {fileID: 1099567217}
   - button: {fileID: 1981260684}
-    lockIcon: {fileID: 1099567217}
+    lockIcon: {fileID: 413955358}
 --- !u!4 &216032147
 Transform:
   m_ObjectHideFlags: 0

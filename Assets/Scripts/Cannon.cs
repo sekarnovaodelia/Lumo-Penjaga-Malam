@@ -11,21 +11,48 @@ public class Cannon : MonoBehaviour
     public float aggroDistance = 30f;
     public float fireDelay = 2f;
 
+    public int burstCount = 1;
+    public float spreadAngle = 10f;
+
     bool isShooting;
+    int level;
 
     void Start()
-    {
-        GameObject p = GameObject.FindWithTag("Player");
+{
+    GameObject p = GameObject.FindWithTag("Player");
 
-        if (p != null)
-        {
-            player = p.transform;
-        }
-        else
-        {
-            Debug.LogError("PLAYER NOT FOUND");
-        }
+    if (p != null)
+    {
+        player = p.transform;
     }
+    else
+    {
+        Debug.LogError("PLAYER NOT FOUND");
+    }
+
+    level = GameManager.Instance.CurrentLevel;
+
+    ApplyLevelSettings();
+}
+
+void ApplyLevelSettings()
+{
+    fireDelay = 2f;
+    burstCount = 1;
+
+    if (level == 5)
+    {
+        fireDelay = 1.5f;
+    }
+
+    if (level == 6)
+    {
+        fireDelay = 3f;
+        burstCount = 2;
+        spreadAngle = 12f;
+    }
+}
+
 
     void Update()
     {
@@ -65,25 +92,37 @@ public class Cannon : MonoBehaviour
     }
 
     IEnumerator ShootLoop()
+{
+    while (true)
     {
-        while (true)
+        if (player == null || !player.gameObject.activeInHierarchy)
+            yield break;
+
+        Vector3 dir = player.position - shootPoint.position;
+        float baseAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+        for (int i = 0; i < burstCount; i++)
         {
-            if (player == null || !player.gameObject.activeInHierarchy)
-                yield break;
+            float angle = baseAngle;
 
-            Vector3 dir = player.position - shootPoint.position;
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            if (burstCount > 1)
+            {
+                float offset = (i - (burstCount - 1) / 2f) * spreadAngle;
+                angle += offset;
+            }
 
-            AudioManager.Instance.PlayCannonShoot();
             Instantiate(
                 bulletPrefab,
                 shootPoint.position,
                 Quaternion.Euler(0f, 0f, angle)
             );
-
-            yield return new WaitForSeconds(fireDelay);
         }
+
+        AudioManager.Instance.PlayCannonShoot();
+
+        yield return new WaitForSeconds(fireDelay);
     }
+}
 
     void OnDestroy()
     {

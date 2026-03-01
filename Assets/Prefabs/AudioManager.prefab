@@ -143,10 +143,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicSource: {fileID: 307944202401829370}
   menuMusic: {fileID: 8300000, guid: 1baa6eb90f6f8f542acdcb93fa1dfda9, type: 3}
-  chaseMusic: {fileID: 8300000, guid: 072776053d0fe074ab2e167755385d0f, type: 3}
+  levelMusic: {fileID: 8300000, guid: ed3902eb858073146bf0f863f2891fe1, type: 3}
   audioSourceList: []
   hitSound: {fileID: 8300000, guid: f8fa37ebc9b545242b059e014ed6965f, type: 3}
   fallSound: {fileID: 8300000, guid: e97efe73eff362744a940202f0705e94, type: 3}
   pistolSound: {fileID: 8300000, guid: b776492e65723d74faddb218bbbf9718, type: 3}
   cannonShootSound: {fileID: 8300000, guid: 7e14f775c1087b5458bce30c99b6b2b6, type: 3}
   passSound: {fileID: 8300000, guid: 19db0d4b07330f048a62432aaa78f328, type: 3}
+  winMusic: {fileID: 8300000, guid: 578750e4ffda98a4a92e39d1728610ee, type: 3}

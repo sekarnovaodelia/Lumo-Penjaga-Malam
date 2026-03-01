@@ -9,7 +9,7 @@ public class AudioManager : MonoBehaviour
     [Header("Music")]
     public AudioSource musicSource;
     public AudioClip menuMusic;
-    public AudioClip chaseMusic;
+    public AudioClip levelMusic;
 
     [Header("SFX")]
     public List<AudioSource> audioSourceList = new List<AudioSource>();
@@ -19,6 +19,9 @@ public class AudioManager : MonoBehaviour
     public AudioClip pistolSound;
     public AudioClip cannonShootSound;
     public AudioClip passSound;
+
+    [Header("Special Music")]
+public AudioClip winMusic;
 
     float defaultMusicVolume;
 
@@ -39,14 +42,14 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         int music = PlayerPrefs.GetInt("music", 1);
-        musicSource.mute = music == 0;
+        AudioListener.volume = music == 1 ? 1f : 0f;
     }
 
     // ================= MUSIC =================
 
     public void ToggleMusic(bool state)
     {
-        musicSource.mute = !state;
+        AudioListener.volume = state ? 1f : 0f;
         PlayerPrefs.SetInt("music", state ? 1 : 0);
     }
 
@@ -55,10 +58,28 @@ public class AudioManager : MonoBehaviour
         StartCoroutine(FadeMusic(menuMusic, 1f));
     }
 
-    public void PlayChaseMusic()
+    public void PlayLevelMusic()
     {
-        StartCoroutine(FadeMusic(chaseMusic, 1f));
+        StartCoroutine(FadeMusic(levelMusic, 1f));
     }
+
+    public void StopMusic()
+    {
+        StopAllCoroutines();
+        musicSource.Stop();
+        musicSource.clip = null;
+        musicSource.volume = defaultMusicVolume;
+    }
+
+    public void StopAllSFX()
+    {
+        foreach (AudioSource src in audioSourceList)
+        {
+            if (src != null) src.Stop();
+        }
+    }
+
+
 
     IEnumerator FadeMusic(AudioClip newClip, float fadeTime)
     {
@@ -170,4 +191,9 @@ public class AudioManager : MonoBehaviour
     {
         PlaySound(passSound, 0.7f);
     }
+
+    public void PlayWinMusic()
+{
+    StartCoroutine(FadeMusic(winMusic, 1f));
+}
 }

@@ -172,6 +172,12 @@ MonoBehaviour:
   bulletPrefab: {fileID: 5630339288512209751, guid: c2fc4d3117954fb418978167f1e83f27,
     type: 3}
   aimRange: 20
+  magazineSize: 4
+  currentAmmo: 0
+  totalAmmo: 0
+  reloadTime: 1.5
+  ammoText: {fileID: 0}
+  reloadText: {fileID: 0}
 --- !u!212 &29440322
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -429,6 +435,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 527830928}
   spawner: {fileID: 2105631072}
+  levelIndex: 2
   hearts: []
   maxHealth: 0
   pauseButton: {fileID: 272968875}
@@ -1627,7 +1634,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c231a489ac80afe46985629f5ad46f4f, type: 2}
+  - {fileID: 2100000, guid: 714f90453be25814bb6e7d8a631d0bc6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4052,7 +4059,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 86937624cf8a06e4eb8ad96f309f2cc7, type: 2}
+  - {fileID: 2100000, guid: 4dfda66b91af8ae4e96b468438639805, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4333,6 +4340,14 @@ MonoBehaviour:
   minHeight: 0
   maxHeight: 2
   verticalGap: 3
+  isLevel5: 0
+  movingPipeChance: 0.5
+  liftAmplitude: 1.5
+  liftSpeed: 0.8
+  ammoPickupPrefab: {fileID: 0}
+  heartPickupPrefab: {fileID: 0}
+  pickupChance: 0.3
+  heartChance: 0.5
 --- !u!1 &2141706724
 GameObject:
   m_ObjectHideFlags: 0

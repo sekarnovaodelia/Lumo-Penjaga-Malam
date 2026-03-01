@@ -66,6 +66,14 @@ public class LumoHealth : MonoBehaviour
         isInvincible = false;
     }
 
+    public void AddHealth(int amount)
+{
+    if (currentHealth >= maxHealth) return;
+
+    currentHealth += amount;
+    currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+}
+
 void Die()
 {
     GameManager.Instance.GameOver();

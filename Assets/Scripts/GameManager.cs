@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Player player;
     [SerializeField] private Spawner spawner;
+    [SerializeField] private int levelIndex = 1;
+    public int CurrentLevel => levelIndex;
 
     [Header("Health UI")]
     [SerializeField] private Image[] hearts;
@@ -24,6 +26,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject levelPassedPanel;
+
+    // === TAMBAHKAN INI ===
+    [SerializeField] private GameObject congratulationsPanel;  // <-- Panel baru untuk Level 10
+    // =====================
 
     private bool isPaused = false;
     public bool IsPaused => isPaused;
@@ -55,6 +61,9 @@ public class GameManager : MonoBehaviour
     private bool waitingToStart = true;
     public bool IsWaitingToStart => waitingToStart;
 
+    // Konstanta level terakhir
+    private const int LAST_LEVEL = 10;
+
     // =======================================================
 
     void ClearProjectiles()
@@ -84,6 +93,10 @@ public class GameManager : MonoBehaviour
         pausePanel.SetActive(false);
         gameOverPanel.SetActive(false);
         levelPassedPanel.SetActive(false);
+
+        // === TAMBAHKAN INI ===
+        if (congratulationsPanel != null) congratulationsPanel.SetActive(false);
+        // =====================
 
         // Hide health & objective at start
         SetHealthUIVisible(false);
@@ -134,6 +147,11 @@ public class GameManager : MonoBehaviour
         pausePanel.SetActive(false);
         gameOverPanel.SetActive(false);
         levelPassedPanel.SetActive(false);
+
+        // === TAMBAHKAN INI ===
+        if (congratulationsPanel != null) congratulationsPanel.SetActive(false);
+        // =====================
+
         if (pauseButton != null) pauseButton.SetActive(true);
 
         // Show health & objective when playing
@@ -145,7 +163,7 @@ public class GameManager : MonoBehaviour
         player.gameObject.SetActive(true);
         player.enabled = true;
 
-        AudioManager.Instance.PlayChaseMusic();
+        AudioManager.Instance.PlayLevelMusic();
 
         foreach (Pipes p in FindObjectsOfType<Pipes>())
             Destroy(p.gameObject);
@@ -176,7 +194,7 @@ public class GameManager : MonoBehaviour
         pausePanel.SetActive(false);
         if (pauseButton != null) pauseButton.SetActive(true);
         Time.timeScale = 1f;
-        AudioManager.Instance.PlayChaseMusic();
+        AudioManager.Instance.PlayLevelMusic();
     }
 
     // ================= DAMAGE =================
@@ -210,6 +228,16 @@ public class GameManager : MonoBehaviour
             if (heart != null)
                 heart.gameObject.SetActive(visible);
         }
+    }
+
+    public void AddHealth(int amount)
+    {
+        if (IsGameOver) return;
+
+        currentHealth += amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        UpdateHealthUI();
     }
 
     void SetObjectiveUIVisible(bool visible)
@@ -281,7 +309,7 @@ public class GameManager : MonoBehaviour
 
     public void StartChaseMusic()
     {
-        AudioManager.Instance.PlayChaseMusic();
+        AudioManager.Instance.PlayLevelMusic();
     }
 
     public void StopChaseMusic()
@@ -296,20 +324,60 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
         player.enabled = false;
 
-        AudioManager.Instance.PlayPass();
-        AudioManager.Instance.DuckMusic(1f, 0.2f);
+        AudioManager.Instance.StopMusic();
+
+if (levelIndex >= LAST_LEVEL)
+{
+    AudioManager.Instance.PlayWinMusic();
+}
+else
+{
+    AudioManager.Instance.PlayPass();
+}
 
         if (pauseButton != null) pauseButton.SetActive(false);
-        levelPassedPanel.SetActive(true);
+
+        // === MODIFIKASI: Cek apakah ini level terakhir ===
+        if (levelIndex >= LAST_LEVEL)
+        {
+            ShowCongratulations();
+        }
+        else
+        {
+            levelPassedPanel.SetActive(true);
+        }
+        // =================================================
 
         // Save progress — unlock the next level
-        int currentLevel = SceneManager.GetActiveScene().buildIndex;
         int savedLevel = PlayerPrefs.GetInt("levelUnlocked", 1);
-        if (currentLevel + 1 > savedLevel)
+        if (levelIndex + 1 > savedLevel)
         {
-            PlayerPrefs.SetInt("levelUnlocked", currentLevel + 1);
+            PlayerPrefs.SetInt("levelUnlocked", levelIndex + 1);
             PlayerPrefs.Save();
         }
+        Debug.Log("Level " + levelIndex + " complete! Unlocked up to: " + PlayerPrefs.GetInt("levelUnlocked", 1));
+    }
+
+    // ================= CONGRATULATIONS (LEVEL 10) =================
+
+    void ShowCongratulations()
+    {
+        if (congratulationsPanel != null)
+            congratulationsPanel.SetActive(true);
+        else
+        {
+            // Fallback jika panel belum di-assign di Inspector
+            Debug.LogWarning("congratulationsPanel belum di-assign di Inspector! Menampilkan levelPassedPanel sebagai fallback.");
+            levelPassedPanel.SetActive(true);
+        }
+    }
+
+    // Dipanggil oleh tombol "Main Menu" di congratulationsPanel
+    public void CongratulationsToMainMenu()
+    {
+        isPaused = false;
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(0);
     }
 
     // ================= SCENE MANAGEMENT =================
@@ -326,6 +394,8 @@ public class GameManager : MonoBehaviour
 
     public void NextLevel()
     {
+        AudioManager.Instance.StopMusic();
+        AudioManager.Instance.StopAllSFX();
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
