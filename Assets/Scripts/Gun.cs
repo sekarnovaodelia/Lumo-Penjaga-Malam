@@ -19,26 +19,54 @@ public class Gun : MonoBehaviour
     public TMP_Text ammoText;
     public TMP_Text reloadText;
 
+    [Header("Shoot Button")]
+    public GameObject shootButton; // drag tombol shoot dari Inspector
+
     void Start()
     {
         currentAmmo = magazineSize;
+
+        // Sembunyikan semua UI ammo & tombol shoot saat awal
+        SetAmmoUIVisible(false);
+
+        // Subscribe ke event Play dari GameManager
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnPlay += OnGamePlay;
+    }
+
+    void OnDestroy()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnPlay -= OnGamePlay;
+    }
+
+    void OnGamePlay()
+    {
+        // Tampilkan UI ammo & tombol shoot saat game mulai
+        SetAmmoUIVisible(true);
         UpdateUI();
+    }
+
+    void SetAmmoUIVisible(bool visible)
+    {
+        if (ammoText != null)
+            ammoText.gameObject.SetActive(visible);
+
         if (reloadText != null)
-            reloadText.gameObject.SetActive(false);
+            reloadText.gameObject.SetActive(false); // reload text selalu off kecuali saat reload
+
+        if (shootButton != null)
+            shootButton.SetActive(visible);
     }
 
     void Update()
     {
         Aim();
 
-        // ——— Keyboard shoot (PC testing) ———
-        if (Input.GetMouseButtonDown(0))
-        {
-            // Hanya aktif di PC; di Android gunakan tombol UI
 #if UNITY_EDITOR || UNITY_STANDALONE
+        if (Input.GetMouseButtonDown(0))
             TryShoot();
 #endif
-        }
     }
 
     void UpdateUI()
@@ -47,10 +75,7 @@ public class Gun : MonoBehaviour
             ammoText.text = "Peluru: " + currentAmmo + " | Total: " + totalAmmo;
     }
 
-    /// <summary>
-    /// Dipanggil dari UI Button (OnClick) untuk menembak.
-    /// Pasang method ini ke tombol Shoot di Canvas.
-    /// </summary>
+    /// <summary>Dipanggil dari UI Button OnClick untuk menembak.</summary>
     public void TryShoot()
     {
         if (GameManager.Instance.IsWaitingToStart) return;
@@ -58,13 +83,9 @@ public class Gun : MonoBehaviour
         if (isReloading) return;
 
         if (currentAmmo > 0)
-        {
             Fire();
-        }
         else if (totalAmmo > 0)
-        {
             StartCoroutine(Reload());
-        }
     }
 
     void Fire()

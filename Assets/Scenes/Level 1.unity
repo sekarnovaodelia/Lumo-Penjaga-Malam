@@ -178,6 +178,7 @@ MonoBehaviour:
   reloadTime: 1.5
   ammoText: {fileID: 0}
   reloadText: {fileID: 0}
+  shootButton: {fileID: 0}
 --- !u!212 &29440322
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -388,7 +389,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectiveType: 1
-  targetAmount: 5
+  targetAmount: 10
 --- !u!4 &70314516
 Transform:
   m_ObjectHideFlags: 0
@@ -435,7 +436,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 527830928}
   spawner: {fileID: 2105631072}
-  levelIndex: 2
+  levelIndex: 1
   hearts: []
   maxHealth: 0
   pauseButton: {fileID: 272968875}
@@ -2437,7 +2438,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 149568774}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: GameOver
+        m_MethodName: Restart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4013,7 +4014,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7177b51c79cf0c46b2ae85524907385, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationSpeed: 1
+  animationSpeed: 0.7
 --- !u!61 &2026009158
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4337,10 +4338,10 @@ MonoBehaviour:
   cannonPipe: {fileID: -5845766125972383839, guid: 1d09649960a5c42489b4bb8dda6cb910,
     type: 3}
   cannonChance: 0
-  spawnRate: 1.5
-  minHeight: 0
-  maxHeight: 2
-  verticalGap: 3
+  spawnRate: 1.8
+  minHeight: -0.5
+  maxHeight: 1
+  verticalGap: 4
   isLevel5: 0
   movingPipeChance: 0.5
   liftAmplitude: 1.5

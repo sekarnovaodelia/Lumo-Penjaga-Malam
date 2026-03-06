@@ -313,6 +313,7 @@ MonoBehaviour:
   reloadTime: 1.5
   ammoText: {fileID: 492560937}
   reloadText: {fileID: 362479750}
+  shootButton: {fileID: 740552816}
 --- !u!212 &29440322
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -529,7 +530,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectiveType: 3
-  targetAmount: 5
+  targetAmount: 7
 --- !u!4 &70314516
 Transform:
   m_ObjectHideFlags: 0
@@ -2437,6 +2438,54 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &720079524
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 720079526}
+  - component: {fileID: 720079525}
+  m_Layer: 0
+  m_Name: LevelCannonSettings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &720079525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720079524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 700a3df9d30239f47af191bbb907b4ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireDelay: 1.8
+  bulletSpeed: 15
+  burstCount: 1
+  spreadAngle: 10
+--- !u!4 &720079526
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720079524}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 328.17685, y: 301.91992, z: -2.955434}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &740552816
 GameObject:
   m_ObjectHideFlags: 0
@@ -2520,7 +2569,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 29440321}
         m_TargetAssemblyTypeName: Gun, Assembly-CSharp
         m_MethodName: TryShoot
         m_Mode: 1
@@ -4448,7 +4497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7177b51c79cf0c46b2ae85524907385, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationSpeed: 1
+  animationSpeed: 0.7
 --- !u!61 &2026009158
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4770,12 +4819,12 @@ MonoBehaviour:
     type: 3}
   cannonPipe: {fileID: -5845766125972383839, guid: 1d09649960a5c42489b4bb8dda6cb910,
     type: 3}
-  cannonChance: 0.203
+  cannonChance: 0.3
   spawnRate: 1.5
-  minHeight: 0
-  maxHeight: 2
+  minHeight: -1
+  maxHeight: 1
   verticalGap: 3
-  isLevel5: 0
+  isLevel5: 1
   movingPipeChance: 0.5
   liftAmplitude: 1.5
   liftSpeed: 0.8
@@ -4784,7 +4833,7 @@ MonoBehaviour:
   heartPickupPrefab: {fileID: 2690386287401246493, guid: 02920ed3970c29e4b9edbb705f71d4c3,
     type: 3}
   pickupChance: 0.7
-  heartChance: 0.5
+  heartChance: 0.2
 --- !u!1 &2128798466
 GameObject:
   m_ObjectHideFlags: 0

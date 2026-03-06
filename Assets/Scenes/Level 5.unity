@@ -178,6 +178,7 @@ MonoBehaviour:
   reloadTime: 1.5
   ammoText: {fileID: 0}
   reloadText: {fileID: 0}
+  shootButton: {fileID: 0}
 --- !u!212 &29440322
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -260,7 +261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectiveType: 2
-  targetAmount: 3
+  targetAmount: 5
 --- !u!4 &70314516
 Transform:
   m_ObjectHideFlags: 0
@@ -3188,6 +3189,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1491773801}
   m_CullTransparentMesh: 1
+--- !u!1 &1541956882
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1541956884}
+  - component: {fileID: 1541956883}
+  m_Layer: 0
+  m_Name: LevelCannonSettings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1541956883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541956882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 700a3df9d30239f47af191bbb907b4ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireDelay: 2
+  bulletSpeed: 15
+  burstCount: 1
+  spreadAngle: 10
+--- !u!4 &1541956884
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541956882}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 451.0195, y: 233.75504, z: -2.1721547}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!850595691 &1642426431
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -4023,7 +4072,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7177b51c79cf0c46b2ae85524907385, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationSpeed: 1
+  animationSpeed: 0.7
 --- !u!61 &2026009158
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4350,7 +4399,7 @@ MonoBehaviour:
   spawnRate: 1.5
   minHeight: 0
   maxHeight: 2
-  verticalGap: 2
+  verticalGap: 3
   isLevel5: 0
   movingPipeChance: 0.5
   liftAmplitude: 1.5
@@ -4359,4 +4408,4 @@ MonoBehaviour:
   heartPickupPrefab: {fileID: 2690386287401246493, guid: 02920ed3970c29e4b9edbb705f71d4c3,
     type: 3}
   pickupChance: 0.3
-  heartChance: 0.5
+  heartChance: 0.2

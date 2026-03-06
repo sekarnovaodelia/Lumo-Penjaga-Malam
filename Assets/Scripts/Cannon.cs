@@ -9,10 +9,12 @@ public class Cannon : MonoBehaviour
     public GameObject bulletPrefab;
 
     public float aggroDistance = 30f;
-    public float fireDelay = 2f;
 
+    [Header("Fire Settings (override by LevelCannonSettings)")]
+    public float fireDelay = 2f;
     public int burstCount = 1;
     public float spreadAngle = 10f;
+    public float bulletSpeed = 20f; // kecepatan peluru
 
     bool isShooting;
     int level;
@@ -20,28 +22,73 @@ public class Cannon : MonoBehaviour
     void Start()
     {
         GameObject p = GameObject.FindWithTag("Player");
+        if (p != null) player = p.transform;
+        else Debug.LogError("PLAYER NOT FOUND");
 
-        if (p != null)
-        {
-            player = p.transform;
-        }
-        else
-        {
-            Debug.LogError("PLAYER NOT FOUND");
-        }
-
-        // fireDelay, burstCount, and spreadAngle are now set
-        // directly in Inspector per scene for precise control
+        level = GameManager.Instance.CurrentLevel;
+        ApplyLevelSettings();
     }
 
+    void ApplyLevelSettings()
+    {
+        // Cek apakah ada LevelCannonSettings di scene — kalau ada, pakai itu
+        LevelCannonSettings settings = FindObjectOfType<LevelCannonSettings>();
+        if (settings != null)
+        {
+            fireDelay   = settings.fireDelay;
+            burstCount  = settings.burstCount;
+            spreadAngle = settings.spreadAngle;
+            bulletSpeed = settings.bulletSpeed;
+            return;
+        }
+
+        // Fallback: hardcode per level
+        fireDelay   = 2f;
+        burstCount  = 1;
+        spreadAngle = 10f;
+        bulletSpeed = 20f;
+
+        switch (level)
+        {
+            case 5:
+                fireDelay   = 1.5f;
+                bulletSpeed = 22f;
+                break;
+            case 6:
+                fireDelay   = 3f;
+                burstCount  = 2;
+                spreadAngle = 12f;
+                bulletSpeed = 24f;
+                break;
+            case 7:
+                fireDelay   = 1.2f;
+                bulletSpeed = 26f;
+                break;
+            case 8:
+                fireDelay   = 1f;
+                burstCount  = 2;
+                bulletSpeed = 28f;
+                break;
+            case 9:
+                fireDelay   = 0.8f;
+                burstCount  = 3;
+                spreadAngle = 15f;
+                bulletSpeed = 30f;
+                break;
+            case 10:
+                fireDelay   = 0.6f;
+                burstCount  = 3;
+                spreadAngle = 15f;
+                bulletSpeed = 32f;
+                break;
+        }
+    }
 
     void Update()
     {
-            // Tambah pengecekan waitingToStart / game belum mulai
-    if (GameManager.Instance == null || GameManager.Instance.IsGameOver) return;
-    
-    // Tambahkan property ini di GameManager
-    if (GameManager.Instance.IsWaitingToStart) return;
+        if (GameManager.Instance == null || GameManager.Instance.IsGameOver) return;
+        if (GameManager.Instance.IsWaitingToStart) return;
+
         if (player == null || !player.gameObject.activeInHierarchy || TurretPivot == null)
         {
             StopAllCoroutines();
@@ -73,40 +120,43 @@ public class Cannon : MonoBehaviour
     }
 
     IEnumerator ShootLoop()
-{
-    while (true)
     {
-        if (player == null || !player.gameObject.activeInHierarchy)
-            yield break;
-
-        Vector3 dir = player.position - shootPoint.position;
-        float baseAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-
-        for (int i = 0; i < burstCount; i++)
+        while (true)
         {
-            float angle = baseAngle;
+            if (player == null || !player.gameObject.activeInHierarchy)
+                yield break;
 
-            if (burstCount > 1)
+            Vector3 dir = player.position - shootPoint.position;
+            float baseAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+            for (int i = 0; i < burstCount; i++)
             {
-                float offset = (i - (burstCount - 1) / 2f) * spreadAngle;
-                angle += offset;
+                float angle = baseAngle;
+                if (burstCount > 1)
+                {
+                    float offset = (i - (burstCount - 1) / 2f) * spreadAngle;
+                    angle += offset;
+                }
+
+                GameObject bulletObj = Instantiate(
+                    bulletPrefab,
+                    shootPoint.position,
+                    Quaternion.Euler(0f, 0f, angle)
+                );
+
+                // Set bullet speed langsung ke komponen Bullet
+                Bullet bullet = bulletObj.GetComponent<Bullet>();
+                if (bullet != null)
+                    bullet.speed = bulletSpeed;
             }
 
-            Instantiate(
-                bulletPrefab,
-                shootPoint.position,
-                Quaternion.Euler(0f, 0f, angle)
-            );
+            AudioManager.Instance.PlayCannonShoot();
+            yield return new WaitForSeconds(fireDelay);
         }
-
-        AudioManager.Instance.PlayCannonShoot();
-
-        yield return new WaitForSeconds(fireDelay);
     }
-}
 
     void OnDestroy()
     {
         StopAllCoroutines();
-    }   
+    }
 }

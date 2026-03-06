@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class LevelSelect : MonoBehaviour
 {
@@ -13,8 +14,14 @@ public class LevelSelect : MonoBehaviour
 
     public LevelSlot[] levels;
 
-    void Start()
+    IEnumerator Start()
     {
+        // Tunggu satu frame agar AudioManager sudah siap
+        yield return null;
+
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayMenuMusic();
+
         int unlocked = PlayerPrefs.GetInt("levelUnlocked", 1);
         unlocked = Mathf.Max(1, unlocked);
 
@@ -35,5 +42,5 @@ public class LevelSelect : MonoBehaviour
     public void LoadLevel(int index)
     {
         SceneManager.LoadScene(index);
-    }   
+    }
 }

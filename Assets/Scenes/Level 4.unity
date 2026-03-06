@@ -3318,6 +3318,54 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1721988675
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1721988677}
+  - component: {fileID: 1721988676}
+  m_Layer: 0
+  m_Name: LevelCannonSettings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1721988676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721988675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 700a3df9d30239f47af191bbb907b4ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireDelay: 2
+  bulletSpeed: 10
+  burstCount: 1
+  spreadAngle: 10
+--- !u!4 &1721988677
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721988675}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 451.0195, y: 233.75504, z: -2.1721547}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1741913700
 GameObject:
   m_ObjectHideFlags: 0
@@ -4023,7 +4071,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7177b51c79cf0c46b2ae85524907385, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationSpeed: 1
+  animationSpeed: 0.7
 --- !u!61 &2026009158
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4347,10 +4395,10 @@ MonoBehaviour:
   cannonPipe: {fileID: -5845766125972383839, guid: 1d09649960a5c42489b4bb8dda6cb910,
     type: 3}
   cannonChance: 0.3
-  spawnRate: 1.5
+  spawnRate: 1.75
   minHeight: 0
-  maxHeight: 2
-  verticalGap: 3
+  maxHeight: 1
+  verticalGap: 4
   isLevel5: 0
   movingPipeChance: 0.5
   liftAmplitude: 1.5

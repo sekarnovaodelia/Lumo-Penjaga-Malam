@@ -1,0 +1,301 @@
+# 🎮 Setting Per Level — Lumo (Level 1-9)
+
+Dokumen ini berisi **nilai yang harus di-set di Inspector** untuk setiap level scene.
+
+> [!IMPORTANT]
+> **3 Script sudah dimodifikasi** agar semua nilai bisa dikontrol dari Inspector:
+> - `Spawner.cs` — Tambah `pipeSpeed`, `spawnHeartPickup`, `spawnAmmoPickup`
+> - `Cannon.cs` — Hapus `ApplyLevelSettings()`, nilai dari Inspector langsung dipakai
+> - Perubahan sudah di-apply, tinggal set nilai di Inspector per scene
+
+---
+
+## Cara Apply
+
+1. Buka scene (mis. `Level 1.unity`)
+2. Klik GameObject yang punya komponen terkait
+3. Set nilai sesuai tabel di bawah
+4. Save scene (`Ctrl+S`)
+5. Ulangi untuk tiap level
+
+---
+
+## Level 1 — Tutorial Terbang ⭐⭐ (Target: 2/10)
+
+**Objective:** PassTurret, Target: 5
+
+| Komponen | Property | Nilai |
+|---|---|---|
+| **Player** | `strength` | **7** |
+| **Player** | `gravity` | **-5** |
+| **Player** | `tilt` | **5** |
+| **Spawner** | `spawnRate` | **2.5** |
+| **Spawner** | `verticalGap` | **5** |
+| **Spawner** | `pipeSpeed` | **3** |
+| **Spawner** | `cannonChance` | **0** |
+| **Spawner** | `minHeight` | **-0.5** |
+| **Spawner** | `maxHeight` | **1** |
+| **Spawner** | `pickupChance` | **0.5** |
+| **Spawner** | `spawnHeartPickup` | ✅ **true** |
+| **Spawner** | `spawnAmmoPickup` | ❌ false |
+| **GameManager** | `maxHealth` | **5** |
+| **LevelSetup** | `objectiveType` | PassTurret |
+| **LevelSetup** | `targetAmount` | **5** |
+
+---
+
+## Level 2 — Mulai Menantang ⭐⭐⭐ (Target: 3/10)
+
+**Objective:** PassTurret, Target: 8
+
+| Komponen | Property | Nilai |
+|---|---|---|
+| **Player** | `strength` | **7** |
+| **Player** | `gravity` | **-5.5** |
+| **Spawner** | `spawnRate` | **2.2** |
+| **Spawner** | `verticalGap` | **4.5** |
+| **Spawner** | `pipeSpeed` | **3.5** |
+| **Spawner** | `cannonChance` | **0** |
+| **Spawner** | `minHeight` | **-0.8** |
+| **Spawner** | `maxHeight` | **1.5** |
+| **Spawner** | `pickupChance` | **0.4** |
+| **Spawner** | `spawnHeartPickup` | ✅ **true** |
+| **Spawner** | `spawnAmmoPickup` | ❌ false |
+| **GameManager** | `maxHealth` | **5** |
+| **LevelSetup** | `objectiveType` | PassTurret |
+| **LevelSetup** | `targetAmount` | **8** |
+
+---
+
+## Level 3 — Perkenalan Cannon ⭐⭐⭐⭐ (Target: 4/10)
+
+**Objective:** AvoidCannon, Target: 5
+
+| Komponen | Property | Nilai |
+|---|---|---|
+| **Player** | `strength` | **7** |
+| **Player** | `gravity` | **-5.5** |
+| **Spawner** | `spawnRate` | **2** |
+| **Spawner** | `verticalGap` | **4.5** |
+| **Spawner** | `pipeSpeed` | **3.5** |
+| **Spawner** | `cannonChance` | **0.2** |
+| **Spawner** | `minHeight` | **-1** |
+| **Spawner** | `maxHeight` | **1.5** |
+| **Spawner** | `pickupChance` | **0.5** |
+| **Spawner** | `spawnHeartPickup` | ✅ **true** |
+| **Spawner** | `spawnAmmoPickup` | ✅ **true** |
+| **Cannon** | `fireDelay` | **4** |
+| **Cannon** | `burstCount` | **1** |
+| **Cannon** | `spreadAngle` | **10** |
+| **Cannon** | `aggroDistance` | **20** |
+| **Bullet** (cannon prefab) | `speed` | **8** |
+| **Bullet** (cannon prefab) | `damage` | **1** |
+| **Gun** | `magazineSize` | **6** |
+| **Gun** | `totalAmmo` | **8** |
+| **Gun** | `reloadTime` | **1** |
+| **GameManager** | `maxHealth` | **5** |
+| **LevelSetup** | `objectiveType` | AvoidCannon |
+| **LevelSetup** | `targetAmount` | **5** |
+
+---
+
+## Level 4 — Hancurkan Cannon ⭐⭐⭐⭐ (Target: 4/10)
+
+**Objective:** DestroyCannon, Target: 3
+
+| Komponen | Property | Nilai |
+|---|---|---|
+| **Player** | `strength` | **7** |
+| **Player** | `gravity` | **-6** |
+| **Spawner** | `spawnRate` | **2** |
+| **Spawner** | `verticalGap` | **4** |
+| **Spawner** | `pipeSpeed` | **3.5** |
+| **Spawner** | `cannonChance` | **0.3** |
+| **Spawner** | `pickupChance` | **0.5** |
+| **Spawner** | `spawnHeartPickup` | ✅ **true** |
+| **Spawner** | `spawnAmmoPickup` | ✅ **true** |
+| **Spawner** | `heartChance` | **0.4** |
+| **Cannon** | `fireDelay` | **3.5** |
+| **Cannon** | `burstCount` | **1** |
+| **Bullet** (cannon prefab) | `speed` | **10** |
+| **Gun** | `magazineSize` | **6** |
+| **Gun** | `totalAmmo` | **8** |
+| **Gun** | `reloadTime` | **1** |
+| **CannonHealth** | `maxHealth` | **50** |
+| **GameManager** | `maxHealth` | **5** |
+| **LevelSetup** | `objectiveType` | DestroyCannon |
+| **LevelSetup** | `targetAmount` | **3** |
+
+---
+
+## Level 5 — Pipa Bergerak ⭐⭐⭐⭐⭐ (Target: 5/10)
+
+**Objective:** AvoidCannon, Target: 8
+
+| Komponen | Property | Nilai |
+|---|---|---|
+| **Player** | `strength` | **6.5** |
+| **Player** | `gravity` | **-6** |
+| **Spawner** | `spawnRate` | **1.8** |
+| **Spawner** | `verticalGap` | **4** |
+| **Spawner** | `pipeSpeed` | **4** |
+| **Spawner** | `cannonChance` | **0.25** |
+| **Spawner** | `isLevel5` | ✅ **true** |
+| **Spawner** | `movingPipeChance` | **0.3** |
+| **Spawner** | `liftAmplitude` | **1** |
+| **Spawner** | `liftSpeed` | **0.5** |
+| **Spawner** | `pickupChance` | **0.5** |
+| **Spawner** | `spawnHeartPickup` | ✅ **true** |
+| **Spawner** | `spawnAmmoPickup` | ✅ **true** |
+| **Cannon** | `fireDelay` | **3** |
+| **Cannon** | `burstCount` | **1** |
+| **Bullet** (cannon prefab) | `speed` | **10** |
+| **Gun** | `magazineSize` | **6** |
+| **Gun** | `totalAmmo` | **6** |
+| **CannonHealth** | `maxHealth` | **50** |
+| **GameManager** | `maxHealth` | **4** |
+| **LevelSetup** | `objectiveType` | AvoidCannon |
+| **LevelSetup** | `targetAmount` | **8** |
+
+---
+
+## Level 6 — Cannon Burst ⭐⭐⭐⭐⭐⭐ (Target: 6/10)
+
+**Objective:** DestroyCannon, Target: 4
+
+| Komponen | Property | Nilai |
+|---|---|---|
+| **Player** | `strength` | **6.5** |
+| **Player** | `gravity` | **-6.5** |
+| **Spawner** | `spawnRate` | **1.8** |
+| **Spawner** | `verticalGap` | **3.8** |
+| **Spawner** | `pipeSpeed` | **4** |
+| **Spawner** | `cannonChance` | **0.3** |
+| **Spawner** | `pickupChance` | **0.5** |
+| **Spawner** | `spawnHeartPickup` | ✅ **true** |
+| **Spawner** | `spawnAmmoPickup` | ✅ **true** |
+| **Spawner** | `heartChance` | **0.4** |
+| **Cannon** | `fireDelay` | **3.5** |
+| **Cannon** | `burstCount` | **2** |
+| **Cannon** | `spreadAngle` | **10** |
+| **Bullet** (cannon prefab) | `speed` | **12** |
+| **Gun** | `magazineSize` | **6** |
+| **Gun** | `totalAmmo` | **6** |
+| **Gun** | `reloadTime` | **1.2** |
+| **CannonHealth** | `maxHealth` | **75** |
+| **GameManager** | `maxHealth` | **4** |
+| **LevelSetup** | `objectiveType` | DestroyCannon |
+| **LevelSetup** | `targetAmount` | **4** |
+
+---
+
+## Level 7 — Intensitas Naik ⭐⭐⭐⭐⭐⭐⭐ (Target: 7/10)
+
+**Objective:** DestroyCannon, Target: 5
+
+| Komponen | Property | Nilai |
+|---|---|---|
+| **Player** | `strength` | **6** |
+| **Player** | `gravity` | **-7** |
+| **Spawner** | `spawnRate` | **1.5** |
+| **Spawner** | `verticalGap` | **3.5** |
+| **Spawner** | `pipeSpeed` | **4.5** |
+| **Spawner** | `cannonChance` | **0.35** |
+| **Spawner** | `pickupChance` | **0.45** |
+| **Spawner** | `spawnHeartPickup` | ✅ **true** |
+| **Spawner** | `spawnAmmoPickup` | ✅ **true** |
+| **Spawner** | `heartChance` | **0.5** |
+| **Cannon** | `fireDelay` | **2.5** |
+| **Cannon** | `burstCount` | **1** |
+| **Bullet** (cannon prefab) | `speed` | **15** |
+| **Gun** | `magazineSize` | **5** |
+| **Gun** | `totalAmmo` | **4** |
+| **Gun** | `reloadTime` | **1.3** |
+| **CannonHealth** | `maxHealth` | **75** |
+| **GameManager** | `maxHealth` | **4** |
+| **LevelSetup** | `objectiveType` | DestroyCannon |
+| **LevelSetup** | `targetAmount` | **5** |
+
+---
+
+## Level 8 — Semua Mekanik ⭐⭐⭐⭐⭐⭐⭐ (Target: 7/10)
+
+**Objective:** DestroyCannon, Target: 6
+
+| Komponen | Property | Nilai |
+|---|---|---|
+| **Player** | `strength` | **6** |
+| **Player** | `gravity` | **-7.5** |
+| **Spawner** | `spawnRate` | **1.3** |
+| **Spawner** | `verticalGap` | **3.5** |
+| **Spawner** | `pipeSpeed` | **4.5** |
+| **Spawner** | `cannonChance` | **0.35** |
+| **Spawner** | `isLevel5` | ✅ **true** |
+| **Spawner** | `movingPipeChance` | **0.3** |
+| **Spawner** | `liftAmplitude` | **1.2** |
+| **Spawner** | `liftSpeed` | **0.7** |
+| **Spawner** | `pickupChance` | **0.4** |
+| **Spawner** | `spawnHeartPickup` | ✅ **true** |
+| **Spawner** | `spawnAmmoPickup` | ✅ **true** |
+| **Cannon** | `fireDelay` | **2** |
+| **Cannon** | `burstCount` | **2** |
+| **Cannon** | `spreadAngle` | **12** |
+| **Bullet** (cannon prefab) | `speed` | **15** |
+| **Gun** | `magazineSize` | **5** |
+| **Gun** | `totalAmmo` | **4** |
+| **Gun** | `reloadTime` | **1.5** |
+| **CannonHealth** | `maxHealth` | **100** |
+| **GameManager** | `maxHealth` | **3** |
+| **LevelSetup** | `objectiveType` | DestroyCannon |
+| **LevelSetup** | `targetAmount` | **6** |
+
+---
+
+## Level 9 — Pre-Boss ⭐⭐⭐⭐⭐⭐⭐⭐ (Target: 8/10)
+
+**Objective:** DestroyCannon atau Boss Fight
+
+| Komponen | Property | Nilai |
+|---|---|---|
+| **Player** | `strength` | **5.5** |
+| **Player** | `gravity` | **-8** |
+| **Spawner** | `spawnRate` | **1.2** |
+| **Spawner** | `verticalGap` | **3.2** |
+| **Spawner** | `pipeSpeed` | **5** |
+| **Spawner** | `cannonChance` | **0.4** |
+| **Spawner** | `pickupChance` | **0.4** |
+| **Spawner** | `spawnHeartPickup` | ✅ **true** |
+| **Spawner** | `spawnAmmoPickup` | ✅ **true** |
+| **Spawner** | `heartChance` | **0.5** |
+| **Cannon** | `fireDelay` | **2** |
+| **Cannon** | `burstCount` | **2** |
+| **Cannon** | `spreadAngle` | **12** |
+| **Bullet** (cannon prefab) | `speed` | **18** |
+| **Gun** | `magazineSize` | **4** |
+| **Gun** | `totalAmmo` | **4** |
+| **Gun** | `reloadTime` | **1.5** |
+| **CannonHealth** | `maxHealth` | **100** |
+| **BossManager** | `maxHealth` | **5** |
+| **BossManager** | `stopDuration` | **8** |
+| **BossManager** | `runSpeed` | **1.5** |
+| **BossManager** | `questionRange` | **6** |
+| **GameManager** | `maxHealth` | **3** |
+
+---
+
+## 📈 Ringkasan Kurva Kesulitan
+
+| Level | Difficulty | Gravity | Strength | Gap | Pipe Speed | Spawn Rate | HP | Cannon |
+|---|---|---|---|---|---|---|---|---|
+| 1 | ⭐⭐ | -5 | 7 | 5 | 3 | 2.5s | 5 | ❌ |
+| 2 | ⭐⭐⭐ | -5.5 | 7 | 4.5 | 3.5 | 2.2s | 5 | ❌ |
+| 3 | ⭐⭐⭐⭐ | -5.5 | 7 | 4.5 | 3.5 | 2s | 5 | Slow |
+| 4 | ⭐⭐⭐⭐ | -6 | 7 | 4 | 3.5 | 2s | 5 | Normal |
+| 5 | ⭐⭐⭐⭐⭐ | -6 | 6.5 | 4 | 4 | 1.8s | 4 | +Lift |
+| 6 | ⭐⭐⭐⭐⭐⭐ | -6.5 | 6.5 | 3.8 | 4 | 1.8s | 4 | Burst |
+| 7 | ⭐⭐⭐⭐⭐⭐⭐ | -7 | 6 | 3.5 | 4.5 | 1.5s | 4 | Fast |
+| 8 | ⭐⭐⭐⭐⭐⭐⭐ | -7.5 | 6 | 3.5 | 4.5 | 1.3s | 3 | Burst+Lift |
+| 9 | ⭐⭐⭐⭐⭐⭐⭐⭐ | -8 | 5.5 | 3.2 | 5 | 1.2s | 3 | Burst+Fast |
+
+> [!TIP]
+> Setelah apply, playtest setiap level. Kalau masih terlalu sulit, naikkan `verticalGap` +0.5 atau turunkan `gravity` +0.5. Kalau terlalu mudah, lakukan sebaliknya.

@@ -178,6 +178,7 @@ MonoBehaviour:
   reloadTime: 1.5
   ammoText: {fileID: 0}
   reloadText: {fileID: 0}
+  shootButton: {fileID: 0}
 --- !u!212 &29440322
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -388,7 +389,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectiveType: 1
-  targetAmount: 5
+  targetAmount: 15
 --- !u!4 &70314516
 Transform:
   m_ObjectHideFlags: 0
@@ -2788,7 +2789,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 149568774}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: GameOver
+        m_MethodName: Restart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

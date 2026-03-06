@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip passSound;
 
     [Header("Special Music")]
-public AudioClip winMusic;
+    public AudioClip winMusic;
 
     float defaultMusicVolume;
 
@@ -32,10 +33,27 @@ public AudioClip winMusic;
             Instance = this;
             DontDestroyOnLoad(gameObject);
             defaultMusicVolume = musicSource.volume;
+
+            // Subscribe ke event scene loaded
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    // Otomatis play menu music saat masuk scene MainMenu atau LevelSelect
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "MainMenu" || scene.name == "LevelSelect")
+        {
+            PlayMenuMusic(forceRestart: true);
         }
     }
 
@@ -53,14 +71,19 @@ public AudioClip winMusic;
         PlayerPrefs.SetInt("music", state ? 1 : 0);
     }
 
-    public void PlayMenuMusic()
+    public void PlayMenuMusic(bool forceRestart = false)
     {
-        StartCoroutine(FadeMusic(menuMusic, 1f));
+        StartCoroutine(FadeMusic(menuMusic, 1f, forceRestart));
     }
 
     public void PlayLevelMusic()
     {
         StartCoroutine(FadeMusic(levelMusic, 1f));
+    }
+
+    public void PlayWinMusic()
+    {
+        StartCoroutine(FadeMusic(winMusic, 1f));
     }
 
     public void StopMusic()
@@ -79,24 +102,27 @@ public AudioClip winMusic;
         }
     }
 
-
-
-    IEnumerator FadeMusic(AudioClip newClip, float fadeTime)
+    IEnumerator FadeMusic(AudioClip newClip, float fadeTime, bool forceRestart = false)
     {
         if (newClip == null) yield break;
-        if (musicSource.clip == newClip) yield break;
 
-        if (!musicSource.isPlaying)
+        // Skip kalau sudah play clip yang sama DAN tidak dipaksa restart
+        if (!forceRestart && musicSource.clip == newClip && musicSource.isPlaying)
+            yield break;
+
+        if (!musicSource.isPlaying || forceRestart)
         {
+            musicSource.Stop();
             musicSource.clip = newClip;
             musicSource.loop = true;
+            musicSource.volume = defaultMusicVolume;
             musicSource.Play();
             yield break;
         }
 
+        // Fade out
         float t = 0f;
         float startVol = musicSource.volume;
-
         while (t < fadeTime)
         {
             t += Time.unscaledDeltaTime;
@@ -108,6 +134,7 @@ public AudioClip winMusic;
         musicSource.loop = true;
         musicSource.Play();
 
+        // Fade in
         t = 0f;
         while (t < fadeTime)
         {
@@ -156,7 +183,6 @@ public AudioClip winMusic;
         AudioSource newSource = obj.AddComponent<AudioSource>();
         newSource.playOnAwake = false;
         newSource.loop = false;
-
         newSource.pitch = 1f + Random.Range(-randomPitch, randomPitch);
         newSource.volume = volume;
         newSource.PlayOneShot(clip);
@@ -172,28 +198,8 @@ public AudioClip winMusic;
         DuckMusic(0.4f, 0.3f);
     }
 
-    public void PlayFall()
-    {
-        PlaySound(fallSound, 1f);
-    }
-
-    public void PlayPistol()
-    {
-        PlaySound(pistolSound, 0.8f, 0.1f);
-    }
-
-    public void PlayCannonShoot()
-    {
-        PlaySound(cannonShootSound, 0.8f, 0.05f);
-    }
-
-    public void PlayPass()
-    {
-        PlaySound(passSound, 0.7f);
-    }
-
-    public void PlayWinMusic()
-{
-    StartCoroutine(FadeMusic(winMusic, 1f));
-}
+    public void PlayFall()      { PlaySound(fallSound, 1f); }
+    public void PlayPistol()    { PlaySound(pistolSound, 0.8f, 0.1f); }
+    public void PlayCannonShoot() { PlaySound(cannonShootSound, 0.8f, 0.05f); }
+    public void PlayPass()      { PlaySound(passSound, 0.7f); }
 }
