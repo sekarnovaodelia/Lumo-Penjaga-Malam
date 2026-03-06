@@ -18,40 +18,21 @@ public class Cannon : MonoBehaviour
     int level;
 
     void Start()
-{
-    GameObject p = GameObject.FindWithTag("Player");
-
-    if (p != null)
     {
-        player = p.transform;
+        GameObject p = GameObject.FindWithTag("Player");
+
+        if (p != null)
+        {
+            player = p.transform;
+        }
+        else
+        {
+            Debug.LogError("PLAYER NOT FOUND");
+        }
+
+        // fireDelay, burstCount, and spreadAngle are now set
+        // directly in Inspector per scene for precise control
     }
-    else
-    {
-        Debug.LogError("PLAYER NOT FOUND");
-    }
-
-    level = GameManager.Instance.CurrentLevel;
-
-    ApplyLevelSettings();
-}
-
-void ApplyLevelSettings()
-{
-    fireDelay = 2f;
-    burstCount = 1;
-
-    if (level == 5)
-    {
-        fireDelay = 1.5f;
-    }
-
-    if (level == 6)
-    {
-        fireDelay = 3f;
-        burstCount = 2;
-        spreadAngle = 12f;
-    }
-}
 
 
     void Update()

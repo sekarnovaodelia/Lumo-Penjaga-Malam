@@ -334,7 +334,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Tekan SPASI Untuk memulai
+  m_text: Klik Layar untuk Memulai
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -454,6 +454,7 @@ MonoBehaviour:
   pausePanel: {fileID: 685208253}
   gameOverPanel: {fileID: 989508656}
   levelPassedPanel: {fileID: 453678379}
+  congratulationsPanel: {fileID: 0}
   objectiveText: {fileID: 880058408}
 --- !u!4 &149568775
 Transform:

@@ -110,19 +110,30 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (waitingToStart && Input.GetKeyDown(KeyCode.Space))
+        if (waitingToStart)
         {
+        // PC: Space bar
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
             Play();
             return;
+            }
+
+            // Android: tap layar untuk mulai
+            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+            {
+            Play();
+            return;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (IsGameOver) return;
-            if (waitingToStart) return;
+        if (IsGameOver) return;
+        if (waitingToStart) return;
 
-            if (isPaused) Resume();
-            else Pause();
+        if (isPaused) Resume();
+        else Pause();
         }
     }
 

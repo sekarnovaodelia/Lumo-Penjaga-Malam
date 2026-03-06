@@ -170,6 +170,8 @@ MonoBehaviour:
     type: 3}
   aggroDistance: 30
   fireDelay: 2
+  burstCount: 1
+  spreadAngle: 10
 --- !u!114 &-3050612671598492871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,6 +185,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  deathParticlePrefab: {fileID: 8111768013341807630, guid: 0f42f27a8738fbf4b9d609869ff973a1,
+    type: 3}
+  particleDuration: 2
 --- !u!1 &4486063371591449597
 GameObject:
   m_ObjectHideFlags: 0

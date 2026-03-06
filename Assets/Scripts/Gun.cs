@@ -6,14 +6,12 @@ public class Gun : MonoBehaviour
 {
     public Transform shootPoint;
     public GameObject bulletPrefab;
-
     public float aimRange = 20f;
 
     [Header("Ammo System")]
     public int magazineSize = 4;
     public int currentAmmo;
     public int totalAmmo = 0;
-
     public float reloadTime = 1.5f;
     bool isReloading = false;
 
@@ -23,9 +21,8 @@ public class Gun : MonoBehaviour
 
     void Start()
     {
-        currentAmmo = magazineSize; // mulai penuh
+        currentAmmo = magazineSize;
         UpdateUI();
-
         if (reloadText != null)
             reloadText.gameObject.SetActive(false);
     }
@@ -33,7 +30,15 @@ public class Gun : MonoBehaviour
     void Update()
     {
         Aim();
-        Shoot();
+
+        // ——— Keyboard shoot (PC testing) ———
+        if (Input.GetMouseButtonDown(0))
+        {
+            // Hanya aktif di PC; di Android gunakan tombol UI
+#if UNITY_EDITOR || UNITY_STANDALONE
+            TryShoot();
+#endif
+        }
     }
 
     void UpdateUI()
@@ -42,22 +47,23 @@ public class Gun : MonoBehaviour
             ammoText.text = "Peluru: " + currentAmmo + " | Total: " + totalAmmo;
     }
 
-    void Shoot()
+    /// <summary>
+    /// Dipanggil dari UI Button (OnClick) untuk menembak.
+    /// Pasang method ini ke tombol Shoot di Canvas.
+    /// </summary>
+    public void TryShoot()
     {
         if (GameManager.Instance.IsWaitingToStart) return;
         if (GameManager.Instance.IsGameOver) return;
         if (isReloading) return;
 
-        if (Input.GetMouseButtonDown(0))
+        if (currentAmmo > 0)
         {
-            if (currentAmmo > 0)
-            {
-                Fire();
-            }
-            else if (totalAmmo > 0)
-            {
-                StartCoroutine(Reload());
-            }
+            Fire();
+        }
+        else if (totalAmmo > 0)
+        {
+            StartCoroutine(Reload());
         }
     }
 
@@ -65,59 +71,46 @@ public class Gun : MonoBehaviour
     {
         currentAmmo--;
         UpdateUI();
-
         AudioManager.Instance.PlayPistol();
         Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
 
         if (currentAmmo <= 0 && totalAmmo > 0)
-        {
             StartCoroutine(Reload());
-        }
     }
 
     IEnumerator Reload()
-{
-    isReloading = true;
-
-    if (reloadText != null)
-        reloadText.gameObject.SetActive(true);
-
-    float timer = reloadTime;
-
-    while (timer > 0f)
     {
-        timer -= Time.deltaTime;
-
+        isReloading = true;
         if (reloadText != null)
-            reloadText.text = "Reloading: " + timer.ToString("F1");
+            reloadText.gameObject.SetActive(true);
 
-        yield return null;
+        float timer = reloadTime;
+        while (timer > 0f)
+        {
+            timer -= Time.deltaTime;
+            if (reloadText != null)
+                reloadText.text = "Reloading: " + timer.ToString("F1");
+            yield return null;
+        }
+
+        int ammoNeeded = magazineSize - currentAmmo;
+        int ammoToLoad = Mathf.Min(ammoNeeded, totalAmmo);
+        currentAmmo += ammoToLoad;
+        totalAmmo -= ammoToLoad;
+
+        UpdateUI();
+        if (reloadText != null)
+            reloadText.gameObject.SetActive(false);
+        isReloading = false;
     }
-
-    int ammoNeeded = magazineSize - currentAmmo;
-    int ammoToLoad = Mathf.Min(ammoNeeded, totalAmmo);
-
-    currentAmmo += ammoToLoad;
-    totalAmmo -= ammoToLoad;
-
-    UpdateUI();
-
-    if (reloadText != null)
-        reloadText.gameObject.SetActive(false);
-
-    isReloading = false;
-}
 
     public void AddAmmo(int amount)
     {
         totalAmmo += amount;
         UpdateUI();
 
-        // kalau mag kosong langsung auto reload
         if (currentAmmo == 0 && !isReloading)
-        {
             StartCoroutine(Reload());
-        }
     }
 
     void Aim()
@@ -133,21 +126,18 @@ public class Gun : MonoBehaviour
     GameObject FindClosestCanon()
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("canon");
-
         GameObject closest = null;
         float minDist = aimRange;
 
         foreach (GameObject e in enemies)
         {
             float dist = Vector2.Distance(transform.position, e.transform.position);
-
             if (dist < minDist)
             {
                 minDist = dist;
                 closest = e;
             }
         }
-
         return closest;
     }
 }

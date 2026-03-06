@@ -9,6 +9,7 @@ public class Spawner : MonoBehaviour
     public float minHeight = -1f;
     public float maxHeight = 2f;
     public float verticalGap = 3f;
+    public float pipeSpeed = 5f;
     int level;
 
     [Header("Level 5 Lift Settings")]
@@ -18,11 +19,15 @@ public class Spawner : MonoBehaviour
     public float liftSpeed = 0.8f;
 
     [Header("Pickup Settings")]
-public GameObject ammoPickupPrefab;
-public GameObject heartPickupPrefab;
+    public GameObject ammoPickupPrefab;
+    public GameObject heartPickupPrefab;
 
-[Range(0f,1f)] public float pickupChance = 0.3f;
-[Range(0f,1f)] public float heartChance = 0.5f; 
+    [Range(0f,1f)] public float pickupChance = 0.3f;
+    [Range(0f,1f)] public float heartChance = 0.5f;
+
+    [Header("Pickup Availability (set per level scene)")]
+    public bool spawnHeartPickup = false;
+    public bool spawnAmmoPickup = false;
 
     private void OnEnable()
     {
@@ -42,6 +47,7 @@ public GameObject heartPickupPrefab;
 
     pipes.transform.position += Vector3.up * Random.Range(minHeight, maxHeight);
     pipes.gap = verticalGap;
+    pipes.speed = pipeSpeed;
 
     // ================= LIFT LOGIC (Level 5) =================
     if (isLevel5)
@@ -57,34 +63,37 @@ public GameObject heartPickupPrefab;
     }
 
     if (Random.value < pickupChance)
-{
-    GameObject prefabToSpawn = null;
-
-    // LEVEL 7+: Heart & Ammo
-    if (level >= 7)
     {
-        if (Random.value < heartChance)
+        GameObject prefabToSpawn = null;
+
+        if (spawnHeartPickup && spawnAmmoPickup)
+        {
+            // Both available: random based on heartChance
+            if (Random.value < heartChance)
+                prefabToSpawn = heartPickupPrefab;
+            else
+                prefabToSpawn = ammoPickupPrefab;
+        }
+        else if (spawnHeartPickup)
+        {
             prefabToSpawn = heartPickupPrefab;
-        else
+        }
+        else if (spawnAmmoPickup)
+        {
             prefabToSpawn = ammoPickupPrefab;
-    }
-    // LEVEL 4-6: Heart Only
-    else if (level >= 4)
-    {
-        prefabToSpawn = heartPickupPrefab;
-    }
+        }
 
-    if (prefabToSpawn != null)
-    {
-        GameObject pickup = Instantiate(
-            prefabToSpawn,
-            pipes.GetGapCenter(),
-            Quaternion.identity
-        );
+        if (prefabToSpawn != null)
+        {
+            GameObject pickup = Instantiate(
+                prefabToSpawn,
+                pipes.GetGapCenter(),
+                Quaternion.identity
+            );
 
-        pickup.transform.SetParent(pipes.transform);
+            pickup.transform.SetParent(pipes.transform);
+        }
     }
-}
 }
 
     public void StartSpawning()
