@@ -20,43 +20,50 @@ public class Gun : MonoBehaviour
     public TMP_Text reloadText;
 
     [Header("Shoot Button")]
-    public GameObject shootButton; // drag tombol shoot dari Inspector
+    public GameObject shootButton;
 
     void Start()
     {
         currentAmmo = magazineSize;
-
-        // Sembunyikan semua UI ammo & tombol shoot saat awal
         SetAmmoUIVisible(false);
 
-        // Subscribe ke event Play dari GameManager
         if (GameManager.Instance != null)
-            GameManager.Instance.OnPlay += OnGamePlay;
+        {
+            GameManager.Instance.OnPlay          += OnGamePlay;
+            GameManager.Instance.OnGameOver      += OnGameEnd;
+            GameManager.Instance.OnLevelComplete += OnGameEnd;
+        }
     }
 
     void OnDestroy()
     {
         if (GameManager.Instance != null)
-            GameManager.Instance.OnPlay -= OnGamePlay;
+        {
+            GameManager.Instance.OnPlay          -= OnGamePlay;
+            GameManager.Instance.OnGameOver      -= OnGameEnd;
+            GameManager.Instance.OnLevelComplete -= OnGameEnd;
+        }
     }
 
     void OnGamePlay()
     {
-        // Tampilkan UI ammo & tombol shoot saat game mulai
         SetAmmoUIVisible(true);
         UpdateUI();
     }
 
+    void OnGameEnd()
+    {
+        // Sembunyikan semua UI gun saat game over atau level complete
+        SetAmmoUIVisible(false);
+        isReloading = false;
+        StopAllCoroutines();
+    }
+
     void SetAmmoUIVisible(bool visible)
     {
-        if (ammoText != null)
-            ammoText.gameObject.SetActive(visible);
-
-        if (reloadText != null)
-            reloadText.gameObject.SetActive(false); // reload text selalu off kecuali saat reload
-
-        if (shootButton != null)
-            shootButton.SetActive(visible);
+        if (ammoText    != null) ammoText.gameObject.SetActive(visible);
+        if (reloadText  != null) reloadText.gameObject.SetActive(false);
+        if (shootButton != null) shootButton.SetActive(visible);
     }
 
     void Update()
@@ -75,7 +82,6 @@ public class Gun : MonoBehaviour
             ammoText.text = "Peluru: " + currentAmmo + " | Total: " + totalAmmo;
     }
 
-    /// <summary>Dipanggil dari UI Button OnClick untuk menembak.</summary>
     public void TryShoot()
     {
         if (GameManager.Instance.IsWaitingToStart) return;
@@ -102,12 +108,19 @@ public class Gun : MonoBehaviour
     IEnumerator Reload()
     {
         isReloading = true;
-        if (reloadText != null)
-            reloadText.gameObject.SetActive(true);
+        if (reloadText != null) reloadText.gameObject.SetActive(true);
 
         float timer = reloadTime;
         while (timer > 0f)
         {
+            // Stop reload kalau game over / level complete
+            if (GameManager.Instance.IsGameOver)
+            {
+                isReloading = false;
+                if (reloadText != null) reloadText.gameObject.SetActive(false);
+                yield break;
+            }
+
             timer -= Time.deltaTime;
             if (reloadText != null)
                 reloadText.text = "Reloading: " + timer.ToString("F1");
@@ -117,11 +130,10 @@ public class Gun : MonoBehaviour
         int ammoNeeded = magazineSize - currentAmmo;
         int ammoToLoad = Mathf.Min(ammoNeeded, totalAmmo);
         currentAmmo += ammoToLoad;
-        totalAmmo -= ammoToLoad;
+        totalAmmo   -= ammoToLoad;
 
         UpdateUI();
-        if (reloadText != null)
-            reloadText.gameObject.SetActive(false);
+        if (reloadText != null) reloadText.gameObject.SetActive(false);
         isReloading = false;
     }
 

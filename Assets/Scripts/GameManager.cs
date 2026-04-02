@@ -26,25 +26,20 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject levelPassedPanel;
+    [SerializeField] private GameObject congratulationsPanel;
 
-    // === TAMBAHKAN INI ===
-    [SerializeField] private GameObject congratulationsPanel;  // <-- Panel baru untuk Level 10
-    // =====================
+    [Header("Free Mode Score Panel")]
+    [SerializeField] private GameObject scorePanelFreeMode;
+    [SerializeField] private TMP_Text finalScoreText;
 
     private bool isPaused = false;
     public bool IsPaused => isPaused;
 
     public event System.Action OnPlay;
+    public event System.Action OnGameOver;
+    public event System.Action OnLevelComplete;
 
-    // ================= OBJECTIVE =================
-
-    public enum ObjectiveType
-    {
-        None,
-        PassTurret,
-        AvoidCannon,
-        DestroyCannon
-    }
+    public enum ObjectiveType { None, PassTurret, AvoidCannon, DestroyCannon }
 
     [Header("Objective UI")]
     [SerializeField] private TMP_Text objectiveText;
@@ -54,25 +49,21 @@ public class GameManager : MonoBehaviour
     private ObjectiveType currentObjective = ObjectiveType.None;
     public ObjectiveType CurrentObjective => currentObjective;
 
-    private int objectiveTarget = 0;
+    private int objectiveTarget   = 0;
     private int objectiveProgress = 0;
 
-    public bool IsGameOver { get; private set; }
-    private bool waitingToStart = true;
+    public bool IsGameOver       { get; private set; }
     public bool IsWaitingToStart => waitingToStart;
+    private bool waitingToStart  = true;
 
-    // Konstanta level terakhir
+    public bool IsFreeMode { get; private set; }
+
     private const int LAST_LEVEL = 10;
-
-    // =======================================================
 
     void ClearProjectiles()
     {
-        foreach (Bullet b in FindObjectsOfType<Bullet>())
-            DestroyImmediate(b.gameObject);
-
-        foreach (Cannon c in FindObjectsOfType<Cannon>())
-            c.StopAllCoroutines();
+        foreach (Bullet b in FindObjectsOfType<Bullet>())   DestroyImmediate(b.gameObject);
+        foreach (Cannon c in FindObjectsOfType<Cannon>())   c.StopAllCoroutines();
     }
 
     void Awake()
@@ -83,22 +74,19 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        getReady.SetActive(true);
+        if (getReady != null) getReady.SetActive(true);
 
         waitingToStart = true;
         Time.timeScale = 0f;
-        player.enabled = false;
+        if (player != null) player.enabled = false;
 
-        if (pauseButton != null) pauseButton.SetActive(false);
-        pausePanel.SetActive(false);
-        gameOverPanel.SetActive(false);
-        levelPassedPanel.SetActive(false);
-
-        // === TAMBAHKAN INI ===
+        if (pauseButton          != null) pauseButton.SetActive(false);
+        if (pausePanel           != null) pausePanel.SetActive(false);
+        if (gameOverPanel        != null) gameOverPanel.SetActive(false);
+        if (levelPassedPanel     != null) levelPassedPanel.SetActive(false);
         if (congratulationsPanel != null) congratulationsPanel.SetActive(false);
-        // =====================
+        if (scorePanelFreeMode   != null) scorePanelFreeMode.SetActive(false);
 
-        // Hide health & objective at start
         SetHealthUIVisible(false);
         SetObjectiveUIVisible(false);
 
@@ -112,28 +100,14 @@ public class GameManager : MonoBehaviour
     {
         if (waitingToStart)
         {
-        // PC: Space bar
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-            Play();
-            return;
-            }
-
-            // Android: tap layar untuk mulai
-            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-            {
-            Play();
-            return;
-            }
+            if (Input.GetKeyDown(KeyCode.Space)) { Play(); return; }
+            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) { Play(); return; }
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-        if (IsGameOver) return;
-        if (waitingToStart) return;
-
-        if (isPaused) Resume();
-        else Pause();
+            if (IsGameOver || waitingToStart) return;
+            if (isPaused) Resume(); else Pause();
         }
     }
 
@@ -142,10 +116,16 @@ public class GameManager : MonoBehaviour
     public void Play()
     {
         waitingToStart = false;
-        IsGameOver = false;
-        isPaused = false;
+        IsGameOver     = false;
+        isPaused       = false;
 
-        if (BackgroundPanel != null) BackgroundPanel.SetActive(false);
+        if (BackgroundPanel      != null) BackgroundPanel.SetActive(false);
+        if (getReady             != null) getReady.SetActive(false);
+        if (pausePanel           != null) pausePanel.SetActive(false);
+        if (gameOverPanel        != null) gameOverPanel.SetActive(false);
+        if (levelPassedPanel     != null) levelPassedPanel.SetActive(false);
+        if (congratulationsPanel != null) congratulationsPanel.SetActive(false);
+        if (scorePanelFreeMode   != null) scorePanelFreeMode.SetActive(false);
 
         ClearProjectiles();
         objectiveProgress = 0;
@@ -154,36 +134,25 @@ public class GameManager : MonoBehaviour
         currentHealth = maxHealth;
         UpdateHealthUI();
 
-        getReady.SetActive(false);
-        pausePanel.SetActive(false);
-        gameOverPanel.SetActive(false);
-        levelPassedPanel.SetActive(false);
-
-        // === TAMBAHKAN INI ===
-        if (congratulationsPanel != null) congratulationsPanel.SetActive(false);
-        // =====================
-
         if (pauseButton != null) pauseButton.SetActive(true);
 
-        // Show health & objective when playing
         SetHealthUIVisible(true);
         SetObjectiveUIVisible(true);
 
         Time.timeScale = 1f;
 
-        player.gameObject.SetActive(true);
-        player.enabled = true;
+        if (player != null)
+        {
+            player.gameObject.SetActive(true);
+            player.enabled = true;
+        }
 
-        AudioManager.Instance.PlayLevelMusic();
+        AudioManager.Instance.PlayLevelMusic(levelIndex);
 
-        foreach (Pipes p in FindObjectsOfType<Pipes>())
-            Destroy(p.gameObject);
+        foreach (Pipes  p in FindObjectsOfType<Pipes>())  Destroy(p.gameObject);
+        foreach (Bullet b in FindObjectsOfType<Bullet>()) Destroy(b.gameObject);
 
-        foreach (Bullet b in FindObjectsOfType<Bullet>())
-            Destroy(b.gameObject);
-
-        if (spawner != null)
-            spawner.StartSpawning();
+        if (spawner != null) spawner.StartSpawning();
 
         OnPlay?.Invoke();
     }
@@ -193,7 +162,7 @@ public class GameManager : MonoBehaviour
     public void Pause()
     {
         isPaused = true;
-        pausePanel.SetActive(true);
+        if (pausePanel  != null) pausePanel.SetActive(true);
         if (pauseButton != null) pauseButton.SetActive(false);
         Time.timeScale = 0f;
         AudioManager.Instance.PlayMenuMusic();
@@ -202,10 +171,10 @@ public class GameManager : MonoBehaviour
     public void Resume()
     {
         isPaused = false;
-        pausePanel.SetActive(false);
+        if (pausePanel  != null) pausePanel.SetActive(false);
         if (pauseButton != null) pauseButton.SetActive(true);
         Time.timeScale = 1f;
-        AudioManager.Instance.PlayLevelMusic();
+        AudioManager.Instance.PlayLevelMusic(levelIndex);
     }
 
     // ================= DAMAGE =================
@@ -213,20 +182,16 @@ public class GameManager : MonoBehaviour
     public void TakeDamage(int dmg)
     {
         if (IsGameOver) return;
-
         currentHealth -= dmg;
         UpdateHealthUI();
-
         AudioManager.Instance.PlayHit();
-
-        if (currentHealth <= 0)
-            GameOver();
+        if (player != null) player.FlashHit();
+        if (currentHealth <= 0) GameOver();
     }
 
     void UpdateHealthUI()
     {
         if (hearts == null) return;
-
         for (int i = 0; i < hearts.Length; i++)
             hearts[i].enabled = i < currentHealth;
     }
@@ -235,26 +200,19 @@ public class GameManager : MonoBehaviour
     {
         if (hearts == null) return;
         foreach (Image heart in hearts)
-        {
-            if (heart != null)
-                heart.gameObject.SetActive(visible);
-        }
+            if (heart != null) heart.gameObject.SetActive(visible);
     }
 
     public void AddHealth(int amount)
     {
         if (IsGameOver) return;
-
-        currentHealth += amount;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
         UpdateHealthUI();
     }
 
     void SetObjectiveUIVisible(bool visible)
     {
-        if (objectiveText != null)
-            objectiveText.gameObject.SetActive(visible);
+        if (objectiveText != null) objectiveText.gameObject.SetActive(visible);
     }
 
     // ================= GAME OVER =================
@@ -264,42 +222,85 @@ public class GameManager : MonoBehaviour
         if (IsGameOver) return;
 
         IsGameOver = true;
-        player.SetFall();
+        if (player  != null) player.SetFall();
         AudioManager.Instance.PlayFall();
-        gameOverPanel.SetActive(true);
+
         if (pauseButton != null) pauseButton.SetActive(false);
         SetHealthUIVisible(false);
+        SetObjectiveUIVisible(false);
 
-        StartCoroutine(GameOverRoutine());
+        if (spawner != null) spawner.StopSpawning();
+
+        try { OnGameOver?.Invoke(); }
+        catch (System.Exception e) { Debug.LogWarning("[GameManager] OnGameOver error: " + e.Message); }
+
+        if (IsFreeMode)
+            StartCoroutine(ShowFreeModeScorePanel());
+        else
+        {
+            if (gameOverPanel != null) gameOverPanel.SetActive(true);
+            StartCoroutine(GameOverRoutine());
+        }
+    }
+
+    IEnumerator ShowFreeModeScorePanel()
+    {
+        yield return new WaitForSecondsRealtime(1.2f);
+
+        if (player != null) player.enabled = false;
+        Time.timeScale = 0f;
+
+        if (scorePanelFreeMode != null)
+        {
+            scorePanelFreeMode.SetActive(true);
+
+            if (finalScoreText != null)
+            {
+                string label = currentObjective switch
+                {
+                    ObjectiveType.PassTurret    => "Lewati Turret",
+                    ObjectiveType.AvoidCannon   => "Hindari Meriam",
+                    ObjectiveType.DestroyCannon => "Hancurkan Meriam",
+                    _                           => "Score"
+                };
+                finalScoreText.text = label + "\n" + objectiveProgress;
+            }
+        }
+        else
+        {
+            if (gameOverPanel != null) gameOverPanel.SetActive(true);
+        }
     }
 
     IEnumerator GameOverRoutine()
     {
         yield return new WaitForSeconds(1f);
-
-        player.enabled = false;
+        if (player != null) player.enabled = false;
         Time.timeScale = 0f;
     }
+
+    // ================= FREE MODE =================
+
+    public void SetFreeMode(bool value) { IsFreeMode = value; }
 
     // ================= OBJECTIVE =================
 
     public void SetObjective(ObjectiveType type, int target)
     {
-        currentObjective = type;
-        objectiveTarget = target;
+        currentObjective  = type;
+        objectiveTarget   = target;
         objectiveProgress = 0;
         UpdateObjectiveUI();
     }
 
     public void AddObjectiveProgress()
     {
-        if (IsGameOver || currentObjective == ObjectiveType.None)
-            return;
-
+        if (IsGameOver) return;
         objectiveProgress++;
         UpdateObjectiveUI();
+        AudioManager.Instance.PlayScoring();
 
-        if (objectiveProgress >= objectiveTarget)
+        if (!IsFreeMode && currentObjective != ObjectiveType.None && objectiveProgress >= objectiveTarget)
             LevelComplete();
     }
 
@@ -309,81 +310,63 @@ public class GameManager : MonoBehaviour
 
         string label = currentObjective switch
         {
-            ObjectiveType.PassTurret => "Lewati Turret",
-            ObjectiveType.AvoidCannon => "Hindari Meriam",
+            ObjectiveType.PassTurret    => "Lewati Turret",
+            ObjectiveType.AvoidCannon   => "Hindari Meriam",
             ObjectiveType.DestroyCannon => "Hancurkan Meriam",
-            _ => ""
+            _                           => "Score"
         };
 
-        objectiveText.text = label + ": " + objectiveProgress + " / " + objectiveTarget;
+        objectiveText.text = IsFreeMode
+            ? label + ": " + objectiveProgress
+            : label + ": " + objectiveProgress + " / " + objectiveTarget;
     }
 
-    public void StartChaseMusic()
-    {
-        AudioManager.Instance.PlayLevelMusic();
-    }
-
-    public void StopChaseMusic()
-    {
-        AudioManager.Instance.PlayMenuMusic();
-    }
+    public void StartChaseMusic() { AudioManager.Instance.PlayLevelMusic(levelIndex); }
+    public void StopChaseMusic()  { AudioManager.Instance.PlayMenuMusic(); }
 
     // ================= LEVEL COMPLETE =================
 
     void LevelComplete()
     {
         Time.timeScale = 0f;
-        player.enabled = false;
+        if (player != null) player.enabled = false;
+
+        SetHealthUIVisible(false);
+        SetObjectiveUIVisible(false);
+        if (pauseButton != null) pauseButton.SetActive(false);
+        if (spawner != null) spawner.StopSpawning();
 
         AudioManager.Instance.StopMusic();
 
-if (levelIndex >= LAST_LEVEL)
-{
-    AudioManager.Instance.PlayWinMusic();
-}
-else
-{
-    AudioManager.Instance.PlayPass();
-}
-
-        if (pauseButton != null) pauseButton.SetActive(false);
-
-        // === MODIFIKASI: Cek apakah ini level terakhir ===
         if (levelIndex >= LAST_LEVEL)
         {
+            AudioManager.Instance.PlayWinMusic();
             ShowCongratulations();
         }
         else
         {
-            levelPassedPanel.SetActive(true);
+            AudioManager.Instance.PlayPass();
+            if (levelPassedPanel != null) levelPassedPanel.SetActive(true);
         }
-        // =================================================
 
-        // Save progress — unlock the next level
+        OnLevelComplete?.Invoke();
+
         int savedLevel = PlayerPrefs.GetInt("levelUnlocked", 1);
         if (levelIndex + 1 > savedLevel)
         {
             PlayerPrefs.SetInt("levelUnlocked", levelIndex + 1);
             PlayerPrefs.Save();
         }
-        Debug.Log("Level " + levelIndex + " complete! Unlocked up to: " + PlayerPrefs.GetInt("levelUnlocked", 1));
     }
 
-    // ================= CONGRATULATIONS (LEVEL 10) =================
+    // ================= CONGRATULATIONS =================
 
     void ShowCongratulations()
     {
-        if (congratulationsPanel != null)
-            congratulationsPanel.SetActive(true);
-        else
-        {
-            // Fallback jika panel belum di-assign di Inspector
-            Debug.LogWarning("congratulationsPanel belum di-assign di Inspector! Menampilkan levelPassedPanel sebagai fallback.");
-            levelPassedPanel.SetActive(true);
-        }
+        if (congratulationsPanel != null) congratulationsPanel.SetActive(true);
+        else if (levelPassedPanel != null) levelPassedPanel.SetActive(true);
     }
 
-    // Dipanggil oleh tombol "Main Menu" di congratulationsPanel
     public void CongratulationsToMainMenu()
     {
         isPaused = false;
@@ -391,14 +374,25 @@ else
         SceneManager.LoadScene(0);
     }
 
+    // ================= LEADERBOARD =================
+
+    public void OpenLeaderboard()
+    {
+        if (LeaderboardManager.Instance == null) return;
+        LeaderboardManager.Instance.OpenLeaderboard();
+    }
+
+    public void CloseLeaderboard()
+    {
+        if (LeaderboardManager.Instance == null) return;
+        LeaderboardManager.Instance.CloseLeaderboard();
+    }
+
     // ================= SCENE MANAGEMENT =================
 
     public void Restart()
     {
-        Bullet[] bullets = FindObjectsOfType<Bullet>(true);
-        foreach (Bullet b in bullets)
-            Destroy(b.gameObject);
-
+        foreach (Bullet b in FindObjectsOfType<Bullet>(true)) Destroy(b.gameObject);
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
@@ -416,5 +410,15 @@ else
         isPaused = false;
         Time.timeScale = 1f;
         SceneManager.LoadScene(0);
+    }
+
+    public void LoadLevelSelect()
+    {
+        SceneManager.LoadScene("LevelSelect");
+    }
+
+    public void GoToFreeModeSelect()
+    {
+        SceneManager.LoadScene(15);
     }
 }

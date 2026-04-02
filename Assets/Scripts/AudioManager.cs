@@ -20,9 +20,11 @@ public class AudioManager : MonoBehaviour
     public AudioClip pistolSound;
     public AudioClip cannonShootSound;
     public AudioClip passSound;
+    public AudioClip scoringSound; // sound saat lewat scoring
 
     [Header("Special Music")]
     public AudioClip winMusic;
+    public AudioClip level10Music;
 
     float defaultMusicVolume;
 
@@ -33,8 +35,6 @@ public class AudioManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
             defaultMusicVolume = musicSource.volume;
-
-            // Subscribe ke event scene loaded
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
@@ -48,13 +48,10 @@ public class AudioManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    // Otomatis play menu music saat masuk scene MainMenu atau LevelSelect
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.name == "MainMenu" || scene.name == "LevelSelect")
-        {
             PlayMenuMusic(forceRestart: true);
-        }
     }
 
     void Start()
@@ -76,9 +73,17 @@ public class AudioManager : MonoBehaviour
         StartCoroutine(FadeMusic(menuMusic, 1f, forceRestart));
     }
 
-    public void PlayLevelMusic()
+    public void PlayLevelMusic(int level = 0)
     {
-        StartCoroutine(FadeMusic(levelMusic, 1f));
+        if (level == 10 && level10Music != null)
+            StartCoroutine(FadeMusic(level10Music, 1f));
+        else
+            StartCoroutine(FadeMusic(levelMusic, 1f));
+    }
+
+    public void PlayLevel10Music()
+    {
+        StartCoroutine(FadeMusic(level10Music != null ? level10Music : levelMusic, 1f));
     }
 
     public void PlayWinMusic()
@@ -97,16 +102,13 @@ public class AudioManager : MonoBehaviour
     public void StopAllSFX()
     {
         foreach (AudioSource src in audioSourceList)
-        {
             if (src != null) src.Stop();
-        }
     }
 
     IEnumerator FadeMusic(AudioClip newClip, float fadeTime, bool forceRestart = false)
     {
         if (newClip == null) yield break;
 
-        // Skip kalau sudah play clip yang sama DAN tidak dipaksa restart
         if (!forceRestart && musicSource.clip == newClip && musicSource.isPlaying)
             yield break;
 
@@ -120,7 +122,6 @@ public class AudioManager : MonoBehaviour
             yield break;
         }
 
-        // Fade out
         float t = 0f;
         float startVol = musicSource.volume;
         while (t < fadeTime)
@@ -134,7 +135,6 @@ public class AudioManager : MonoBehaviour
         musicSource.loop = true;
         musicSource.Play();
 
-        // Fade in
         t = 0f;
         while (t < fadeTime)
         {
@@ -192,14 +192,10 @@ public class AudioManager : MonoBehaviour
 
     // ================= HELPERS =================
 
-    public void PlayHit()
-    {
-        PlaySound(hitSound, 1f);
-        DuckMusic(0.4f, 0.3f);
-    }
-
-    public void PlayFall()      { PlaySound(fallSound, 1f); }
-    public void PlayPistol()    { PlaySound(pistolSound, 0.8f, 0.1f); }
-    public void PlayCannonShoot() { PlaySound(cannonShootSound, 0.8f, 0.05f); }
-    public void PlayPass()      { PlaySound(passSound, 0.7f); }
+    public void PlayHit()           { PlaySound(hitSound, 1f); DuckMusic(0.4f, 0.3f); }
+    public void PlayFall()          { PlaySound(fallSound, 1f); }
+    public void PlayPistol()        { PlaySound(pistolSound, 0.8f, 0.1f); }
+    public void PlayCannonShoot()   { PlaySound(cannonShootSound, 0.8f, 0.05f); }
+    public void PlayPass()          { PlaySound(passSound, 0.7f); }
+    public void PlayScoring()       { PlaySound(scoringSound, 0.8f, 0.05f); }
 }

@@ -260,6 +260,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90e1f8f4cb8c48444bce9735716ce619, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  freeMode: 0
+  freeModeType: 0
   objectiveType: 2
   targetAmount: 5
 --- !u!4 &70314516
@@ -275,7 +277,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &112759948
 GameObject:
@@ -456,6 +458,8 @@ MonoBehaviour:
   gameOverPanel: {fileID: 989508656}
   levelPassedPanel: {fileID: 453678379}
   congratulationsPanel: {fileID: 0}
+  scorePanelFreeMode: {fileID: 0}
+  finalScoreText: {fileID: 0}
   objectiveText: {fileID: 880058408}
 --- !u!4 &149568775
 Transform:
@@ -1066,7 +1070,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d1209a61b78c94d927e1be558eecf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioPrefab: {fileID: 307944202401829371, guid: 60dde409b1ee73145aa5be1c4de74b49,
+  audioPrefab: {fileID: 7854192204042724577, guid: 83e9b80731d3dc24e95a25f073225ea2,
     type: 3}
 --- !u!4 &530283536
 Transform:
@@ -1081,7 +1085,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &546914868
 GameObject:
@@ -1424,7 +1428,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c231a489ac80afe46985629f5ad46f4f, type: 2}
+  - {fileID: 2100000, guid: 714f90453be25814bb6e7d8a631d0bc6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1467,7 +1471,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &723403639
 GameObject:
@@ -3235,7 +3239,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!850595691 &1642426431
 LightingSettings:
@@ -4055,7 +4059,7 @@ GameObject:
   - component: {fileID: 2026009157}
   m_Layer: 0
   m_Name: Ground
-  m_TagString: Obstacle
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4162,55 +4166,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2056243585
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2056243587}
-  - component: {fileID: 2056243586}
-  m_Layer: 0
-  m_Name: EnemySpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &2056243586
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2056243585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 759cccd51eb609141929ccba674a31f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 1225633713617715848, guid: 09eb3b74ec3ddb94ea46205c8ce33d6f,
-    type: 3}
-  spawnDistanceX: 3
-  spawnY: 0
---- !u!4 &2056243587
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2056243585}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.318846, y: -2.1136985, z: -9.92516}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2064344719
 GameObject:
@@ -4409,3 +4365,4 @@ MonoBehaviour:
     type: 3}
   pickupChance: 0.3
   heartChance: 0.2
+  isFreeMode: 0

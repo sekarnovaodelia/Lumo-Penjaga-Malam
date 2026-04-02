@@ -15,16 +15,23 @@ public class CannonHealth : MonoBehaviour
     }
 
     public void TakeDamage(float dmg)
-    {
-        hp -= dmg;
+{
+    hp -= dmg;
 
-        if (hp <= 0f)
+    if (hp <= 0f)
+    {
+        // Free mode ATAU objective DestroyCannon → nambah score
+        if (GameManager.Instance.CurrentObjective == GameManager.ObjectiveType.None ||
+            GameManager.Instance.CurrentObjective == GameManager.ObjectiveType.DestroyCannon)
         {
+            AudioManager.Instance.PlayScoring();
             GameManager.Instance.AddObjectiveProgress();
-            SpawnDeathParticle();
-            Destroy(gameObject);
         }
+
+        SpawnDeathParticle();
+        Destroy(gameObject);
     }
+}
 
     void SpawnDeathParticle()
     {

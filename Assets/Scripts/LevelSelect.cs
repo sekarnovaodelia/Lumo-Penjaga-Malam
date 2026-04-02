@@ -14,9 +14,11 @@ public class LevelSelect : MonoBehaviour
 
     public LevelSlot[] levels;
 
+    // Index array mulai dari mana free mode (array index 10 = level 11)
+    private const int FREE_MODE_START_INDEX = 10;
+
     IEnumerator Start()
     {
-        // Tunggu satu frame agar AudioManager sudah siap
         yield return null;
 
         if (AudioManager.Instance != null)
@@ -29,7 +31,17 @@ public class LevelSelect : MonoBehaviour
 
         for (int i = 0; i < levels.Length; i++)
         {
-            bool isUnlocked = i < unlocked;
+            bool isUnlocked;
+
+            if (i >= FREE_MODE_START_INDEX)
+            {
+                // Level free mode (array index 10-12) unlock semua kalau level 10 sudah clear
+                isUnlocked = unlocked > 10;
+            }
+            else
+            {
+                isUnlocked = i < unlocked;
+            }
 
             if (levels[i].button != null)
                 levels[i].button.interactable = isUnlocked;
@@ -43,4 +55,10 @@ public class LevelSelect : MonoBehaviour
     {
         SceneManager.LoadScene(index);
     }
+
+    public void GoToFreeModeSelect()
+    {
+        SceneManager.LoadScene(15);
+    }
+    
 }

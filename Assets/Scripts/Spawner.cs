@@ -23,6 +23,9 @@ public class Spawner : MonoBehaviour
     [Range(0f, 1f)] public float pickupChance = 0.3f;
     [Range(0f, 1f)] public float heartChance = 0.5f;
 
+    [Header("Free Mode Settings")]
+    public bool isFreeMode = false; // centang di scene 11-13
+
     private int normalPipeCount = 0;
     private int nextCannonAt = 0;
     private bool firstCannonSpawned = false;
@@ -49,8 +52,10 @@ public class Spawner : MonoBehaviour
 
     private void Spawn()
     {
-        // Level 1-3: tidak ada cannon, selalu pipe biasa
-        bool canSpawnCannon = level >= 4;
+        // Level 1-3: tidak ada cannon
+        // Level 4-10: cannon normal
+        // Free mode (isFreeMode = true): selalu ada cannon
+        bool canSpawnCannon = (isFreeMode && level >= 12) || (level >= 4 && level <= 9); // L1-3,10,11=pipe only L4-9=cannon L12-13=cannon
 
         bool spawnCannon = canSpawnCannon && normalPipeCount >= nextCannonAt;
 
@@ -82,11 +87,10 @@ public class Spawner : MonoBehaviour
         }
 
         // ——— Pickup Logic ———
-        // Heart hanya muncul setelah cannon pertama, di pipe tepat sebelum cannon berikutnya
         bool isHeartPipe = !spawnCannon
                            && firstCannonSpawned
                            && normalPipeCount == nextCannonAt
-                           && level >= 4;
+                           && (level >= 4 || isFreeMode);
 
         GameObject prefabToSpawn = null;
 
@@ -96,7 +100,7 @@ public class Spawner : MonoBehaviour
         }
         else if (!spawnCannon && firstCannonSpawned && Random.value < pickupChance)
         {
-            if (level >= 7)
+            if (level >= 7 || isFreeMode)
                 prefabToSpawn = Random.value < 0.25f ? heartPickupPrefab : ammoPickupPrefab;
             else if (level >= 4)
                 prefabToSpawn = heartPickupPrefab;
@@ -112,8 +116,11 @@ public class Spawner : MonoBehaviour
     public void StartSpawning()
     {
         firstCannonSpawned = false;
-        normalPipeCount = 0;
-        nextCannonAt = level >= 4 ? 3 : 999; // level 1-3: cannon tidak pernah spawn
+        normalPipeCount    = 0;
+
+        // Free mode selalu ada cannon, level 1-3 tidak ada
+        bool hasCannon = (isFreeMode && level >= 12) || (level >= 4 && level <= 9); // L1-3,10,11=pipe only L4-9=cannon L12-13=cannon
+        nextCannonAt = hasCannon ? 3 : 999;
 
         CancelInvoke(nameof(Spawn));
         InvokeRepeating(nameof(Spawn), spawnRate, spawnRate);
